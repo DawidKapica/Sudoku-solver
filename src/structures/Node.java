@@ -49,6 +49,10 @@ public class Node<T> {
         }
     }
 
+    public void addNodeChild(Node<T> node) {
+        childrenList.add(node);
+    }
+
     public T getData () {
         return data;
     }

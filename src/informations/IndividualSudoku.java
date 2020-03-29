@@ -26,13 +26,24 @@ public class IndividualSudoku implements Cloneable {
     public IndividualSudoku (ArrayList<ArrayList<PointSudoku>> sudokuBoard) {
         this.sudokuBoard = new ArrayList<ArrayList<PointSudoku>>();
         for (int i = 0; i < sudokuBoard.size(); i++) {
-            this.sudokuBoard.add(new ArrayList<PointSudoku>(sudokuBoard.get(i)));
+            ArrayList<PointSudoku> row = new ArrayList<PointSudoku>();
+            for (int j = 0; j < sudokuBoard.get(i).size(); j++) {
+                PointSudoku pointSudoku = new PointSudoku(sudokuBoard.get(i).get(j));
+                pointSudoku.setDomainValues(new ArrayList<>(sudokuBoard.get(i).get(j).getDomainValues()));
+                row.add(pointSudoku);
+            }
+            this.sudokuBoard.add(row);
         }
     }
 
 
-    public int getSingleElement(PointSudoku pointSudoku) {
+    public int getSingleElementValue (PointSudoku pointSudoku) {
         return sudokuBoard.get(pointSudoku.getVerticalIndex()).get(pointSudoku.getHorizontalIndex()).getValue();
+    }
+
+    public PointSudoku getSingleElement(PointSudoku pointSudoku) {
+        return sudokuBoard.get(pointSudoku.getVerticalIndex()).get(pointSudoku.getHorizontalIndex());
+
     }
 
     public void setSingleElement(PointSudoku pointSudoku, int value) {
@@ -106,7 +117,6 @@ public class IndividualSudoku implements Cloneable {
         //Sprawdzenie kolumn
         for (int i = MIN_SUDOKU_INDEX; i <= MAX_SUDOKU_INDEX; i++) {
             if(checkColumn(i) == false) {
-                System.out.println("kolumny");
                 isCorrect = false;
                 return false;
             }
@@ -114,7 +124,6 @@ public class IndividualSudoku implements Cloneable {
         //Sprawdzenie wierszy
         for (int i = MIN_SUDOKU_INDEX; i <= MAX_SUDOKU_INDEX; i++) {
             if(checkLine(i) == false) {
-                System.out.println("wiersze");
                 isCorrect = false;
                 return false;
             }
@@ -123,7 +132,6 @@ public class IndividualSudoku implements Cloneable {
         for (int i = MIN_SUDOKU_INDEX; i <= MAX_SUDOKU_INDEX; i = i + 3) {
             for (int j = MIN_SUDOKU_INDEX; j <= MAX_SUDOKU_INDEX; j = j + 3) {
                 if(checkGrid(i, j) == false) {
-                    System.out.println("GRID");
                     isCorrect = false;
                     return false;
                 }

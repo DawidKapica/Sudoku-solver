@@ -11,8 +11,8 @@ public class InOrderValue implements ValueSelection {
     public int chooseValue(IndividualSudoku individualSudoku,  PointSudoku pointSudoku) {
 
         if (pointSudoku.getDomainValues().size() != 0) {
-            Collections.sort(pointSudoku.getDomainValues());
-            return pointSudoku.getDomainValues().get(0);
+            Collections.sort(individualSudoku.getSingleElement(pointSudoku).getDomainValues());
+            return individualSudoku.getSingleElement(pointSudoku).getDomainValues().get(0);
         } else {
             return EMPTY_SUDOKU_FIELD;
         }
