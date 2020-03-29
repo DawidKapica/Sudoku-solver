@@ -66,7 +66,6 @@ public class IndividualSudoku implements Cloneable {
                 }
             }
         }
-
         return true;
     }
 
@@ -74,7 +73,6 @@ public class IndividualSudoku implements Cloneable {
         if (lineNumber >= MIN_SUDOKU_INDEX && lineNumber <= MAX_SUDOKU_INDEX) {
             ArrayList<PointSudoku> lineToCheck = new ArrayList<PointSudoku>(sudokuBoard.get(lineNumber));
             Collections.sort(lineToCheck);
-//            System.out.println(lineToCheck);
             for (int i = MIN_SUDOKU_INDEX; i < MAX_SUDOKU_INDEX; i++) {
                 if (lineToCheck.get(i).getValue() != EMPTY_FIELD_VALUE && lineToCheck.get(i).getValue() == lineToCheck.get(i+1).getValue()) {
                     isCorrect = false;
@@ -182,8 +180,14 @@ public class IndividualSudoku implements Cloneable {
         for (int i = 0; i < sudokuBoard.size(); i++) {
             for (int j = 0; j < sudokuBoard.get(i).size(); j++) {
                 sudokuString = sudokuString + String.format("%-3s", sudokuBoard.get(i).get(j).getValue());
+                if ((j+1)%3 == 0) {
+                    sudokuString = sudokuString + String.format("%-3s", "|");
+                }
             }
             sudokuString = sudokuString + "\n";
+            if ((i+1)%3 == 0) {
+                sudokuString = sudokuString + "----------------------------------\n";
+            }
         }
         return sudokuString;
     }

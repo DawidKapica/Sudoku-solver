@@ -3,6 +3,7 @@ package heuristics.valueSelection;
 import informations.IndividualSudoku;
 import informations.PointSudoku;
 
+//NIE ZAIMPLEMENTOWANE
 public class RandomValue implements ValueSelection {
 
     @Override
