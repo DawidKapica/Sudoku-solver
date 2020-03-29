@@ -10,8 +10,8 @@ public class InOrderVariable implements VariableSelection {
 
     public PointSudoku chooseVariable(IndividualSudoku individualSudoku) {
 
-        for (int i = MIN_SUDOKU_INDEX; i < MAX_SUDOKU_INDEX; i++) {
-            for (int j = MIN_SUDOKU_INDEX; j < MAX_SUDOKU_INDEX; j++) {
+        for (int i = MIN_SUDOKU_INDEX; i <= MAX_SUDOKU_INDEX; i++) {
+            for (int j = MIN_SUDOKU_INDEX; j <= MAX_SUDOKU_INDEX; j++) {
                 if (individualSudoku.getSingleElementValue(new PointSudoku(i, j)) == 0) {
                     return new PointSudoku(i, j);
                 }

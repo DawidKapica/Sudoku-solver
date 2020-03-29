@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         ParserSudoku parserSudoku = new ParserSudoku();
-        IndividualSudoku individualSudoku = parserSudoku.parse("Sudoku.csv", 1);
+        IndividualSudoku individualSudoku = parserSudoku.parse("Sudoku.csv", 43);
 
         System.out.println(individualSudoku);
         InOrderValue inOrderValue = new InOrderValue();
@@ -19,5 +19,6 @@ public class Main {
         BacktrackingAlgotithmSudoku backtrackingAlgotithmSudoku = new BacktrackingAlgotithmSudoku(inOrderValue, inOrderVariable);
         ArrayList<IndividualSudoku> x = backtrackingAlgotithmSudoku.findSolutions(individualSudoku);
         System.out.println(x.size());
+        System.out.println(x.toString());
     }
 }

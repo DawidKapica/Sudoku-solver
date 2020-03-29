@@ -60,7 +60,7 @@ public class IndividualSudoku implements Cloneable {
             }
             Collections.sort(columnToCheck);
             for (int i = MIN_SUDOKU_INDEX; i < MAX_SUDOKU_INDEX; i++) {
-                if (columnToCheck.get(i).getValue() != EMPTY_FIELD_VALUE && columnToCheck.get(i) == columnToCheck.get(i+1)) {
+                if (columnToCheck.get(i).getValue() != EMPTY_FIELD_VALUE && columnToCheck.get(i).getValue() == columnToCheck.get(i+1).getValue()) {
                     isCorrect = false;
                     return false;
                 }
