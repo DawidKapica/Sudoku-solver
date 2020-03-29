@@ -27,7 +27,7 @@ public class BacktrackingAlgotithmSudoku {
     public ArrayList<IndividualSudoku> findSolutions(IndividualSudoku individualSudoku) {
         this.individualSudoku = individualSudoku;
         tree = new Tree<IndividualSudoku>(new Node<IndividualSudoku>(individualSudoku));
-        
+
         makeTree(tree.getRootNode(), individualSudoku);
 
         return solveSudoku;
@@ -37,33 +37,36 @@ public class BacktrackingAlgotithmSudoku {
         PointSudoku variable = variableSelection.chooseVariable(individualSudoku);
         if (variable != null) {
             PointSudoku pointSudoku = variableSelection.chooseVariable(individualSudoku);
+            while (pointSudoku.getDomainValues().size() != 0) {
+                int value = valueSelection.chooseValue(individualSudoku, pointSudoku);
+                pointSudoku.deleteValueDomain(value);
+                if (value != 0) {
 
-            int value = valueSelection.chooseValue(individualSudoku, pointSudoku);
-            pointSudoku.deleteValueDomain(value);
+                    IndividualSudoku individualSudokuChild = null;
+                    try {
+                        individualSudokuChild = individualSudoku.clone();
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                    individualSudokuChild.setSingleElement(variable, value);
+                    if (individualSudokuChild.checkSudoku()) {
+                        node.addChild(individualSudokuChild);
+                        System.out.println("sss");
+                        return makeTree(new Node<IndividualSudoku>(individualSudokuChild), individualSudokuChild);
+                    }
 
-            if (value != 0) {
-
-                IndividualSudoku individualSudokuChild = null;
-                try {
-                    individualSudokuChild = individualSudoku.clone();
-                } catch (CloneNotSupportedException e) {
-                    e.printStackTrace();
+                } else {
+                    return node;
                 }
-                individualSudokuChild.setSingleElement(variable, value);
-                if (individualSudoku.checkSudoku()) {
-                    return makeTree(new Node<IndividualSudoku>(individualSudokuChild), individualSudokuChild);
-                }
-            } else {
-                return null;
             }
         } else {
             if(individualSudoku.isFull() && individualSudoku.checkSudoku()) {
                 solveSudoku.add(individualSudoku);
-                return null;
+                return node;
             } else {
-                return null;
+                return node;
             }
         }
-        return null;
+        return node;
     }
 }

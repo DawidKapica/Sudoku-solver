@@ -15,6 +15,7 @@ public class Node<T> {
     }
 
     public Node(T data) {
+        childrenList = new LinkedList<Node<T>>();
         this.data = data;
     }
     public Node(Node<T> parent) {

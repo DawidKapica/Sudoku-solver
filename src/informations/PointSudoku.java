@@ -11,7 +11,7 @@ public class PointSudoku implements Comparable<PointSudoku>{
     private int horizontalIndex;
     private int value = 0;
 
-    ArrayList<Integer> domainValues = new ArrayList<Integer>(List.of(1, 2, 3, 4, 5, 6, 7, 7, 9));
+    ArrayList<Integer> domainValues = new ArrayList<Integer>(List.of(1, 2, 3, 4, 5, 6, 7, 8, 9));
 
 
     public PointSudoku(int verticalIndex, int horizontalIndex) {
@@ -30,6 +30,13 @@ public class PointSudoku implements Comparable<PointSudoku>{
             this.horizontalIndex = horizontalIndex;
             this.value = value;
         }
+    }
+
+    public PointSudoku(PointSudoku pointSudoku) {
+        this.horizontalIndex = pointSudoku.getHorizontalIndex();
+        this.verticalIndex = pointSudoku.getVerticalIndex();
+        this.value = pointSudoku.getValue();
+        domainValues = new ArrayList<Integer>(pointSudoku.getDomainValues());
     }
 
     public int getVerticalIndex () {
@@ -53,7 +60,8 @@ public class PointSudoku implements Comparable<PointSudoku>{
     }
 
     public void deleteValueDomain(int value) {
-        domainValues.remove(value);
+//        System.out.println(domainValues.size());
+        domainValues.remove(Integer.valueOf(value));
     }
 
     public ArrayList<Integer> getDomainValues () {
@@ -74,12 +82,17 @@ public class PointSudoku implements Comparable<PointSudoku>{
 
     @Override
     public int compareTo(PointSudoku pointSudoku) {
-        if (pointSudoku.value > value) {
+        if (pointSudoku.value < value) {
             return 1;
         } else if (pointSudoku.value == value) {
             return 0;
         } else {
             return -1;
         }
+    }
+
+    @Override
+    public String toString () {
+        return ("v" + verticalIndex + "h" + horizontalIndex) + "v" + value;
     }
 }
