@@ -32,4 +32,11 @@ public class WriterToCsv {
         dataLines.add(text);
     }
 
+    public String getCSV_FILE_NAME () {
+        return CSV_FILE_NAME;
+    }
+
+    public void setCSV_FILE_NAME (String CSV_FILE_NAME) {
+        this.CSV_FILE_NAME = CSV_FILE_NAME;
+    }
 }

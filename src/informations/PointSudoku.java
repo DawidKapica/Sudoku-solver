@@ -60,6 +60,7 @@ public class PointSudoku implements Comparable<PointSudoku>{
     }
 
     public void deleteValueDomain(int value) {
+        System.out.println(domainValues);
         domainValues.remove(Integer.valueOf(value));
     }
 

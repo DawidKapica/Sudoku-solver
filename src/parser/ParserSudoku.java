@@ -27,8 +27,8 @@ public class ParserSudoku {
             while (getSudokuIndex(line = reader.readLine()) != sudokuIndex) {}
 
             StringTokenizer tokenizer = new StringTokenizer(line, ";");
-            tokenizer.nextToken(); // index
-            tokenizer.nextToken(); // index
+            tokenizer.nextToken(); // id
+            tokenizer.nextToken(); // difficulty
             char[] tableSudokuWithoutDots = tokenizer.nextToken().replace(".", "0").toCharArray();
 
             ArrayList<Integer> row = new ArrayList<Integer>();

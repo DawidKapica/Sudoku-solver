@@ -13,6 +13,7 @@ public class IndividualSudoku implements Cloneable {
     public static final int EMPTY_FIELD_VALUE = 0;
 
     private boolean isCorrect = true;
+    private boolean hasFieldNullDomain = false;
 
     public IndividualSudoku () {
         sudokuBoard = new ArrayList<ArrayList<PointSudoku>>();
@@ -36,6 +37,19 @@ public class IndividualSudoku implements Cloneable {
         }
     }
 
+    public IndividualSudoku (IndividualSudoku individualSudoku) {
+        this.sudokuBoard = new ArrayList<ArrayList<PointSudoku>>();
+        for (int i = 0; i < sudokuBoard.size(); i++) {
+            ArrayList<PointSudoku> row = new ArrayList<PointSudoku>();
+            for (int j = 0; j < sudokuBoard.get(i).size(); j++) {
+                PointSudoku pointSudoku = new PointSudoku(sudokuBoard.get(i).get(j));
+                pointSudoku.setDomainValues(new ArrayList<>(sudokuBoard.get(i).get(j).getDomainValues()));
+                row.add(pointSudoku);
+            }
+            this.sudokuBoard.add(row);
+        }
+    }
+
 
     public int getSingleElementValue (PointSudoku pointSudoku) {
         return sudokuBoard.get(pointSudoku.getVerticalIndex()).get(pointSudoku.getHorizontalIndex()).getValue();
@@ -43,7 +57,6 @@ public class IndividualSudoku implements Cloneable {
 
     public PointSudoku getSingleElement(PointSudoku pointSudoku) {
         return sudokuBoard.get(pointSudoku.getVerticalIndex()).get(pointSudoku.getHorizontalIndex());
-
     }
 
     public void setSingleElement(PointSudoku pointSudoku, int value) {
@@ -137,7 +150,6 @@ public class IndividualSudoku implements Cloneable {
         }
 
         return true;
-
     }
 
     public boolean isFull() {
@@ -172,6 +184,14 @@ public class IndividualSudoku implements Cloneable {
         IndividualSudoku coordinates = new IndividualSudoku(sudokuBoard);
 
         return coordinates;
+    }
+
+    public boolean isHasFieldNullDomain () {
+        return hasFieldNullDomain;
+    }
+
+    public void setHasFieldNullDomain (boolean hasFieldNullDomain) {
+        this.hasFieldNullDomain = hasFieldNullDomain;
     }
 
     @Override

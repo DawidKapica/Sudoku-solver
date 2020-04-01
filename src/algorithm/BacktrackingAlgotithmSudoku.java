@@ -64,10 +64,7 @@ public class BacktrackingAlgotithmSudoku {
                     nodeChild.setParent(node);
                     node.addNodeChild(makeTree(nodeChild));
 
-                } else {
-
                 }
-
             }
         } else {
             return node;
