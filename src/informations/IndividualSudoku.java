@@ -2,6 +2,7 @@ package informations;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class IndividualSudoku implements Cloneable {
 
@@ -13,6 +14,7 @@ public class IndividualSudoku implements Cloneable {
     public static final int EMPTY_FIELD_VALUE = 0;
 
     private boolean isCorrect = true;
+
     private boolean hasFieldNullDomain = false;
 
     public IndividualSudoku () {
@@ -27,6 +29,7 @@ public class IndividualSudoku implements Cloneable {
     public IndividualSudoku (ArrayList<ArrayList<PointSudoku>> sudokuBoard) {
         this.sudokuBoard = new ArrayList<ArrayList<PointSudoku>>();
         for (int i = 0; i < sudokuBoard.size(); i++) {
+
             ArrayList<PointSudoku> row = new ArrayList<PointSudoku>();
             for (int j = 0; j < sudokuBoard.get(i).size(); j++) {
                 PointSudoku pointSudoku = new PointSudoku(sudokuBoard.get(i).get(j));
@@ -39,11 +42,11 @@ public class IndividualSudoku implements Cloneable {
 
     public IndividualSudoku (IndividualSudoku individualSudoku) {
         this.sudokuBoard = new ArrayList<ArrayList<PointSudoku>>();
-        for (int i = 0; i < sudokuBoard.size(); i++) {
+        for (int i = 0; i < individualSudoku.sudokuBoard.size(); i++) {
             ArrayList<PointSudoku> row = new ArrayList<PointSudoku>();
-            for (int j = 0; j < sudokuBoard.get(i).size(); j++) {
-                PointSudoku pointSudoku = new PointSudoku(sudokuBoard.get(i).get(j));
-                pointSudoku.setDomainValues(new ArrayList<>(sudokuBoard.get(i).get(j).getDomainValues()));
+            for (int j = 0; j < individualSudoku.sudokuBoard.get(i).size(); j++) {
+                PointSudoku pointSudoku = new PointSudoku(individualSudoku.sudokuBoard.get(i).get(j));
+                pointSudoku.setDomainValues(new ArrayList<>(individualSudoku.sudokuBoard.get(i).get(j).getDomainValues()));
                 row.add(pointSudoku);
             }
             this.sudokuBoard.add(row);
@@ -200,6 +203,7 @@ public class IndividualSudoku implements Cloneable {
         for (int i = 0; i < sudokuBoard.size(); i++) {
             for (int j = 0; j < sudokuBoard.get(i).size(); j++) {
                 sudokuString = sudokuString + String.format("%-3s", sudokuBoard.get(i).get(j).getValue());
+//                sudokuString = sudokuString + String.format("%-19s", sudokuBoard.get(i).get(j).getDomainValues());
                 if ((j+1)%3 == 0) {
                     sudokuString = sudokuString + String.format("%-3s", "|");
                 }
@@ -210,5 +214,71 @@ public class IndividualSudoku implements Cloneable {
             }
         }
         return sudokuString;
+    }
+
+
+    public void prepairDomain() {
+        for (int i = 0; i <= MAX_SUDOKU_INDEX; i++) {
+            for (int j = 0; j <= MAX_SUDOKU_INDEX; j++) {
+                if(sudokuBoard.get(i).get(j).getValue() != 0) {
+                    sudokuBoard.get(i).get(j).setDomainValues(new ArrayList<>(List.of(sudokuBoard.get(i).get(j).getValue())));
+                }
+                deleteDomainValuesRow(sudokuBoard.get(i).get(j), sudokuBoard.get(i).get(j).getValue());
+                deleteDomainValuesColumn(sudokuBoard.get(i).get(j), sudokuBoard.get(i).get(j).getValue());
+                deleteDomainValuesGrid(sudokuBoard.get(i).get(j), sudokuBoard.get(i).get(j).getValue());
+
+            }
+        }
+    }
+
+    public void deleteDomainValuesGrid(PointSudoku pointSudoku, int value) {
+        int intHor = pointSudoku.getHorizontalIndex();
+        int intVer = pointSudoku.getVerticalIndex();
+
+        if (intHor == 1 || intHor == 4 || intHor == 7) {
+            intHor = intHor - 1;
+        }
+        if (intVer == 1 || intVer == 4 || intVer == 7) {
+            intVer = intVer - 1;
+        }
+
+        if (intHor == 2 || intHor == 5 || intHor == 8) {
+            intHor = intHor - 2;
+        }
+        if (intVer == 2 || intVer == 5 || intVer == 8) {
+            intVer = intVer - 2;
+        }
+
+        for (int i = intVer; i <= intVer + 2; i++) {
+            for (int j = intHor; j <= intHor + 2; j++) {
+
+                sudokuBoard.get(i).get(j).deleteValueDomain(value);
+                if (sudokuBoard.get(i).get(j).getDomainValues().size() == 0 && sudokuBoard.get(i).get(j).getValue() == 0) {
+                    hasFieldNullDomain = true;
+                }
+            }
+        }
+    }
+
+    public void deleteDomainValuesRow(PointSudoku pointSudoku, int value) {
+        for (int i = MIN_SUDOKU_INDEX; i <= MAX_SUDOKU_INDEX; i++) {
+            if (sudokuBoard.get(pointSudoku.getVerticalIndex()).get(i).getValue() == 0) {
+                sudokuBoard.get(pointSudoku.getVerticalIndex()).get(i).deleteValueDomain(value);
+            }
+            if (sudokuBoard.get(pointSudoku.getVerticalIndex()).get(i).getDomainValues().size() == 0 &&
+                    sudokuBoard.get(pointSudoku.getVerticalIndex()).get(i).getValue() == 0) {
+                hasFieldNullDomain = true;
+            }
+        }
+    }
+
+    public void deleteDomainValuesColumn(PointSudoku pointSudoku, int value) {
+        for (int i = MIN_SUDOKU_INDEX; i <= MAX_SUDOKU_INDEX; i++) {
+            sudokuBoard.get(i).get(pointSudoku.getHorizontalIndex()).deleteValueDomain(value);
+            if (sudokuBoard.get(i).get(pointSudoku.getHorizontalIndex()).getDomainValues().size() == 0 &&
+                    sudokuBoard.get(i).get(pointSudoku.getHorizontalIndex()).getValue() == 0) {
+                hasFieldNullDomain = true;
+            }
+        }
     }
 }

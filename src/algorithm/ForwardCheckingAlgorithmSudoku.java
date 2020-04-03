@@ -8,6 +8,7 @@ import informations.PointSudoku;
 import structures.Node;
 import structures.Tree;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
 public class ForwardCheckingAlgorithmSudoku {
@@ -19,13 +20,29 @@ public class ForwardCheckingAlgorithmSudoku {
 
     ArrayList<IndividualSudoku> solveSudoku = new ArrayList<IndividualSudoku>();
 
+    int numberOfNodes = 0;
+    int findAllSolutionsTime = 0;
+    int numberOfReccurence = 0;
+
+    boolean foundFirstSolution = false;
+
+    int numberOfNodesFirstSol = 0;
+    int findFirstSolTime = 0;
+    long startTimeFirstSol;
+    int numberOfReccurenceFirstSol = 0;
+
     public ForwardCheckingAlgorithmSudoku(ValueSelection valueSelection, VariableSelection variableSelection) {
         this.valueSelection = valueSelection;
         this.variableSelection = variableSelection;
     }
 
     public ArrayList<IndividualSudoku> findSolutions(IndividualSudoku individualSudoku) {
-        tree = new Tree<IndividualSudoku>(new Node<IndividualSudoku>(individualSudoku));
+
+        long startTime = ZonedDateTime.now().toInstant().toEpochMilli();
+        startTimeFirstSol = startTime;
+        IndividualSudoku individualSudokucopy = new IndividualSudoku(individualSudoku);
+//        individualSudokucopy.prepairDomain();
+        tree = new Tree<IndividualSudoku>(new Node<IndividualSudoku>(individualSudokucopy));
 
         try {
             makeTree(tree.getRootNode());
@@ -33,107 +50,82 @@ public class ForwardCheckingAlgorithmSudoku {
             e.printStackTrace();
         }
 
+        long endTime = ZonedDateTime.now().toInstant().toEpochMilli();
+
+        findAllSolutionsTime = (int)(endTime - startTime);
         return solveSudoku;
     }
 
     public Node<IndividualSudoku> makeTree(Node<IndividualSudoku> node) throws CloneNotSupportedException {
-        PointSudoku pointSudoku = variableSelection.chooseVariable(node.getData());
+        numberOfNodes = numberOfNodes + 1;
 
+        PointSudoku pointSudoku = variableSelection.chooseVariable(node.getData());
         IndividualSudoku individualSudoku = node.getData().clone();
         IndividualSudoku individualSudokuChild = individualSudoku.clone();
 
         if(pointSudoku != null) {
             while (individualSudoku.getSingleElement(pointSudoku).getDomainValues().size()!= 0) {
-//            iter = iter + 1;
-//            System.out.println(iter);
-
                 int value = valueSelection.chooseValue(individualSudoku, pointSudoku);
 
                 individualSudoku.getSingleElement(pointSudoku).deleteValueDomain(value);
-//                System.out.println(individualSudokuChild.toString());
                 individualSudokuChild.setSingleElement(pointSudoku, value);
 
+                if ( individualSudokuChild.checkSudoku()) {
 
-                if (individualSudokuChild.checkSudoku() && individualSudokuChild.isFull()) {
-                    Node<IndividualSudoku> nodeChild = new Node<IndividualSudoku>(individualSudokuChild);
-                    nodeChild.setParent(node);
-                    solveSudoku.add(individualSudokuChild);
+                    IndividualSudoku individualSudokuChildCopy = new IndividualSudoku(individualSudokuChild);
 
-                    return nodeChild;
-                } else if (individualSudokuChild.checkSudoku()) {
-                    individualSudokuChild = deleteDomainValuesGrid(individualSudokuChild, pointSudoku, value);
-                    System.out.println(individualSudoku.isHasFieldNullDomain());
-                    if(individualSudokuChild.isHasFieldNullDomain() == false) {
-                        Node<IndividualSudoku> nodeChild = new Node<IndividualSudoku>(individualSudokuChild);
+                    individualSudokuChildCopy.deleteDomainValuesGrid(pointSudoku, value);
+                    individualSudokuChildCopy.deleteDomainValuesColumn(pointSudoku, value);
+                    individualSudokuChildCopy.deleteDomainValuesRow(pointSudoku, value);
+
+                    if(individualSudokuChildCopy.isHasFieldNullDomain() == false) {
+                        Node<IndividualSudoku> nodeChild = new Node<IndividualSudoku>(new IndividualSudoku(individualSudokuChildCopy));
                         nodeChild.setParent(node);
                         node.addNodeChild(makeTree(nodeChild));
-//                        System.out.println(individualSudoku.toString());
-//                        System.out.println(individualSudokuChild.isHasFieldNullDomain());
+
                     } else {
-                        return node;
+                        numberOfReccurence = numberOfReccurence + 1;
                     }
+                } else {
+                    numberOfReccurence = numberOfReccurence + 1;
                 }
             }
         } else {
+            solveSudoku.add(individualSudoku);
+            numberOfNodes = numberOfNodes + 1;
+            if (foundFirstSolution == false) {
+                foundFirstSolution = true;
+                long endTimeFirstSol = ZonedDateTime.now().toInstant().toEpochMilli();
+                numberOfNodesFirstSol = numberOfNodes;
+                numberOfReccurenceFirstSol = numberOfReccurence;
+                findFirstSolTime = (int)(endTimeFirstSol - startTimeFirstSol);
+            }
             return node;
         }
         return node;
     }
 
-    public IndividualSudoku deleteDomainValuesGrid(IndividualSudoku individualSudoku, PointSudoku pointSudoku, int value) {
-        IndividualSudoku individualSudokuCopy = null;
-        try {
-            individualSudokuCopy = individualSudoku.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-
-        for (int i = pointSudoku.getVerticalIndex(); i <= pointSudoku.getVerticalIndex() + 2; i++) {
-            for (int j = pointSudoku.getHorizontalIndex(); j <= pointSudoku.getHorizontalIndex() + 2; j++) {
-                individualSudokuCopy.getSingleElement(new PointSudoku(i, j)).deleteValueDomain(value);
-                if (individualSudokuCopy.getSingleElement(new PointSudoku(i, j)).getDomainValues().size() == 0) {
-                    individualSudokuCopy.setHasFieldNullDomain(true);
-                    return individualSudoku;
-                }
-            }
-        }
-        return individualSudokuCopy;
+    public int getNumberOfNodes () {
+        return numberOfNodes;
     }
 
-    public IndividualSudoku deleteDomainValuesRow(IndividualSudoku individualSudoku, PointSudoku pointSudoku, int value) {
-        IndividualSudoku individualSudokuCopy = null;
-        try {
-            individualSudokuCopy = individualSudoku.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 0; i <=8; i++) {
-            individualSudokuCopy.getSingleElement(new PointSudoku(pointSudoku.getVerticalIndex(), i)).deleteValueDomain(value);
-            if (individualSudokuCopy.getSingleElement(new PointSudoku(pointSudoku.getVerticalIndex(), i)).getDomainValues().size() == 0) {
-                individualSudokuCopy.setHasFieldNullDomain(true);
-                return individualSudoku;
-            }
-        }
-        return individualSudokuCopy;
+    public int getFindAllSolutionsTime () {
+        return findAllSolutionsTime;
     }
 
-    public IndividualSudoku deleteDomainValuesColumn(IndividualSudoku individualSudoku, PointSudoku pointSudoku, int value) {
-        IndividualSudoku individualSudokuCopy = null;
-        try {
-            individualSudokuCopy = individualSudoku.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+    public int getFindFirstSolTime () {
+        return findFirstSolTime;
+    }
 
-        for (int i = 0; i <=8; i++) {
-            individualSudokuCopy.getSingleElement(new PointSudoku(i, pointSudoku.getHorizontalIndex())).deleteValueDomain(value);
-            if (individualSudokuCopy.getSingleElement(new PointSudoku(i, pointSudoku.getHorizontalIndex())).getDomainValues().size() == 0) {
-                individualSudokuCopy.setHasFieldNullDomain(true);
-                return individualSudoku;
-            }
-        }
+    public int getNumberOfNodesFirstSol () {
+        return numberOfNodesFirstSol;
+    }
 
-        return individualSudokuCopy;
+    public int getNumberOfReccurence () {
+        return numberOfReccurence;
+    }
+
+    public int getNumberOfReccurenceFirstSol () {
+        return numberOfReccurenceFirstSol;
     }
 }
