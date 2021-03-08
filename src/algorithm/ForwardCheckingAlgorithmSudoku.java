@@ -80,8 +80,9 @@ public class ForwardCheckingAlgorithmSudoku {
 
                     if(individualSudokuChildCopy.isHasFieldNullDomain() == false) {
                         Node<IndividualSudoku> nodeChild = new Node<IndividualSudoku>(new IndividualSudoku(individualSudokuChildCopy));
-                        nodeChild.setParent(node);
-                        node.addNodeChild(makeTree(nodeChild));
+//                        nodeChild.setParent(node);
+//                        node.addNodeChild(makeTree(nodeChild));
+                        makeTree(nodeChild);
 
                     } else {
                         numberOfReccurence = numberOfReccurence + 1;

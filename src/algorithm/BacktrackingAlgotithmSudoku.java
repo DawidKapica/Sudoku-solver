@@ -18,8 +18,6 @@ public class BacktrackingAlgotithmSudoku {
 
     ArrayList<IndividualSudoku> solveSudoku = new ArrayList<IndividualSudoku>();
 
-
-
     int numberOfNodes = 0;
     int findAllSolutionsTime = 0;
     int numberOfReccurence = 0;
@@ -72,6 +70,7 @@ public class BacktrackingAlgotithmSudoku {
 
 
                 if (individualSudokuChild.checkSudoku()) {
+
                     Node<IndividualSudoku> nodeChild = new Node<IndividualSudoku>(individualSudokuChild);
 //                    nodeChild.setParent(node);
 //                    node.addNodeChild(makeTree(nodeChild));

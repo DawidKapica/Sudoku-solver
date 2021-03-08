@@ -17,6 +17,8 @@ public class IndividualSudoku implements Cloneable {
 
     private boolean hasFieldNullDomain = false;
 
+    IndividualSudokuFillInfomration individualSudokuFillInfomration = null;
+
     public IndividualSudoku () {
         sudokuBoard = new ArrayList<ArrayList<PointSudoku>>();
         for (int i = MIN_SUDOKU_INDEX; i <= MAX_SUDOKU_INDEX; i++) {
@@ -238,16 +240,16 @@ public class IndividualSudoku implements Cloneable {
         if (intHor == 1 || intHor == 4 || intHor == 7) {
             intHor = intHor - 1;
         }
-        if (intVer == 1 || intVer == 4 || intVer == 7) {
-            intVer = intVer - 1;
-        }
+//        if (intVer == 1 || intVer == 4 || intVer == 7) {
+//            intVer = intVer - 1;
+//        }
 
         if (intHor == 2 || intHor == 5 || intHor == 8) {
             intHor = intHor - 2;
         }
-        if (intVer == 2 || intVer == 5 || intVer == 8) {
-            intVer = intVer - 2;
-        }
+//        if (intVer == 2 || intVer == 5 || intVer == 8) {
+//            intVer = intVer - 2;
+//        }
 
         for (int i = intVer; i <= intVer + 2; i++) {
             for (int j = intHor; j <= intHor + 2; j++) {
@@ -280,5 +282,51 @@ public class IndividualSudoku implements Cloneable {
                 hasFieldNullDomain = true;
             }
         }
+    }
+
+    public int checkNumberOfFreeRow(int indexOfRow) {
+        int numberOfFree = 0;
+        for (int i = 0; i < MAX_SUDOKU_INDEX; i++) {
+            if (sudokuBoard.get(indexOfRow).get(i).getValue() != EMPTY_FIELD_VALUE) {
+                numberOfFree++;
+            }
+        }
+        return numberOfFree;
+    }
+
+    public int checkNumberOfFreeColumn(int indexOfColumn) {
+        int numberOfFree = 0;
+        for (int i = 0; i < MAX_SUDOKU_INDEX; i++) {
+            if (sudokuBoard.get(i).get(indexOfColumn).getValue() != EMPTY_FIELD_VALUE) {
+                numberOfFree++;
+            }
+        }
+        return numberOfFree;
+    }
+
+    public int checkNumberOfFreeGrid(int numberOfGrid) {
+        int numberOfFree = 0;
+        if (numberOfGrid == 0 || numberOfGrid == 1 || numberOfGrid == 2) {
+            for (int i = 0; i <= 2; i++) {
+                for (int j = numberOfGrid; j <= numberOfGrid + 2; j++) {
+                    if (sudokuBoard.get(i).get(j).getValue() != 0) {
+                        numberOfFree++;
+                    }
+                }
+            }
+        } else if (numberOfGrid == 3 || numberOfGrid == 4 || numberOfGrid == 5) {
+
+        } else {
+
+        }
+        return numberOfFree;
+    }
+
+    public IndividualSudokuFillInfomration getIndividualSudokuFillInfomration () {
+        return individualSudokuFillInfomration;
+    }
+
+    public void setIndividualSudokuFillInfomration (IndividualSudokuFillInfomration individualSudokuFillInfomration) {
+        this.individualSudokuFillInfomration = individualSudokuFillInfomration;
     }
 }

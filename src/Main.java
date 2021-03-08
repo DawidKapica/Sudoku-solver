@@ -17,7 +17,7 @@ public class Main {
     public static void main(String[] args) {
         WriterToCsv writerToCsv = new WriterToCsv("SUDOKU");
         ParserSudoku parserSudoku = new ParserSudoku();
-        IndividualSudoku individualSudoku = parserSudoku.parse("Sudoku.csv", 46);
+        IndividualSudoku individualSudoku = parserSudoku.parse("Sudoku.csv", 1);
 
         InOrderValue inOrderValue = new InOrderValue();
         InOrderVariable inOrderVariable = new InOrderVariable();
@@ -26,19 +26,19 @@ public class Main {
         RandomValue randomValue = new RandomValue();
         RandomVariable randomVariable = new RandomVariable();
 
-        BacktrackingAlgotithmSudoku backtrackingAlgotithmSudoku = new BacktrackingAlgotithmSudoku(inOrderValue, inOrderVariable);
-//        ForwardCheckingAlgorithmSudoku forwardCheckingAlgorithmSudoku = new ForwardCheckingAlgorithmSudoku(randomValue, mostRestrictiveVariable);
+//        BacktrackingAlgotithmSudoku backtrackingAlgotithmSudoku = new BacktrackingAlgotithmSudoku(inOrderValue, inOrderVariable);
+        ForwardCheckingAlgorithmSudoku forwardCheckingAlgorithmSudoku = new ForwardCheckingAlgorithmSudoku(randomValue, mostRestrictiveVariable);
 
-        ArrayList<IndividualSudoku> results = backtrackingAlgotithmSudoku.findSolutions(individualSudoku);
-//        ArrayList<IndividualSudoku> results = forwardCheckingAlgorithmSudoku.findSolutions(individualSudoku);
+//        ArrayList<IndividualSudoku> results = backtrackingAlgotithmSudoku.findSolutions(individualSudoku);
+        ArrayList<IndividualSudoku> results = forwardCheckingAlgorithmSudoku.findSolutions(individualSudoku);
 
 
-        System.out.println("Liczba odwiedzonych węzłów: " + backtrackingAlgotithmSudoku.getNumberOfNodes());
-        System.out.println("Czas znalezienia rozwiązań: " + backtrackingAlgotithmSudoku.getFindAllSolutionsTime());
-        System.out.println("Liczba nawrtotów: " + backtrackingAlgotithmSudoku.getNumberOfReccurence());
-        System.out.println("Liczba odwiedzonych węzłów do pierwszego rozwiązania: " + backtrackingAlgotithmSudoku.getNumberOfNodesFirstSol());
-        System.out.println("Czas znalezienia pierwszego rozwiązania: " + backtrackingAlgotithmSudoku.getFindFirstSolTime());
-        System.out.println("Liczba nawrotów pierwszego rozwiązania: " + backtrackingAlgotithmSudoku.getNumberOfReccurenceFirstSol());
+        System.out.println("Liczba odwiedzonych węzłów: " + forwardCheckingAlgorithmSudoku.getNumberOfNodes());
+        System.out.println("Czas znalezienia rozwiązań: " + forwardCheckingAlgorithmSudoku.getFindAllSolutionsTime());
+        System.out.println("Liczba nawrtotów: " + forwardCheckingAlgorithmSudoku.getNumberOfReccurence());
+        System.out.println("Liczba odwiedzonych węzłów do pierwszego rozwiązania: " + forwardCheckingAlgorithmSudoku.getNumberOfNodesFirstSol());
+        System.out.println("Czas znalezienia pierwszego rozwiązania: " + forwardCheckingAlgorithmSudoku.getFindFirstSolTime());
+        System.out.println("Liczba nawrotów pierwszego rozwiązania: " + forwardCheckingAlgorithmSudoku.getNumberOfReccurenceFirstSol());
 
 
         System.out.println("number of solutions " + results.size());
